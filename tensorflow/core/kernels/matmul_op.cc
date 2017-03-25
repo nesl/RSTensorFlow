@@ -24,6 +24,13 @@ limitations under the License.
 #include "tensorflow/core/framework/register_types.h"
 #include "tensorflow/core/kernels/fill_functor.h"
 
+// renderscript support
+#include <fstream>
+#include <time.h>
+#include "tensorflow/contrib/android_renderscript_ops/jni/rsMatmul.h"
+#include "tensorflow/contrib/android_renderscript_ops/utils/android_utils.h"
+// renderscript support
+
 #if GOOGLE_CUDA
 #include "cuda/include/cuda.h"
 #include "tensorflow/core/platform/stream_executor.h"
@@ -301,6 +308,20 @@ class MatMulOp : public OpKernel {
       f(ctx->eigen_device<Device>(), out->flat<T>());
       return;
     }
+
+    //////////////////////// renderscript support
+    std::stringstream ss;
+    double start, finish;
+    start = (double)(clock()/(double)CLOCKS_PER_SEC);
+    androidrs::matmul::rsMatmul_sgemm(static_cast<void*>(const_cast<char*>(a.tensor_data().data())), 0, 
+                                  static_cast<void*>(const_cast<char*>(b.tensor_data().data())), 0, 
+                                  static_cast<void*>(const_cast<char*>(out->tensor_data().data())), 
+                                  a.dim_size(0), b.dim_size(1), a.dim_size(1), 1, 0);
+    finish = (double)(clock()/(double)CLOCKS_PER_SEC);
+    ss << "Matmul consume time: " << (finish - start) << " sec";
+    android_log_print(ss.str().c_str());   
+    return;
+    //////////////////////// renderscript support
 
     LaunchMatMul<Device, T, USE_CUBLAS>::launch(ctx, this, a, b, dim_pair, out);
   }

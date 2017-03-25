@@ -45,6 +45,13 @@ limitations under the License.
 #include "tensorflow/core/util/tensor_format.h"
 #include "tensorflow/core/util/use_cudnn.h"
 
+// renderscript support
+#include <fstream>
+#include <time.h>
+#include "tensorflow/contrib/android_renderscript_ops/jni/rsConv.h"
+#include "tensorflow/contrib/android_renderscript_ops/utils/android_utils.h"
+// renderscript support
+
 #if GOOGLE_CUDA
 #include "tensorflow/core/kernels/conv_ops_gpu.h"
 #include "tensorflow/core/platform/stream_executor.h"
@@ -376,6 +383,23 @@ class Conv2DOp : public BinaryOp<T> {
             out_depth, stride_rows, stride_cols, output, data_format_)) {
       return;
     }
+
+    //////////////////////// renderscript support
+    std::stringstream ss;
+    double start, finish;
+    start = (double)(clock()/(double)CLOCKS_PER_SEC);
+    androidrs::conv::rsConvInfo convInfo(in_depth, input_rows, input_cols, filter_rows, filter_cols,
+                                         stride_rows, stride_cols, pad_rows, pad_cols, 
+                                         out_depth, out_rows, out_cols, batch, sizeof(T));
+    androidrs::conv::rsConv_script<T>(static_cast<void*>(const_cast<char*>(filter.tensor_data().data())), 
+                                      static_cast<void*>(const_cast<char*>(input.tensor_data().data())), 
+                                      static_cast<void*>(const_cast<char*>(output->tensor_data().data())), 
+                                      convInfo);
+    finish = (double)(clock()/(double)CLOCKS_PER_SEC);
+    ss << "Conv consume time: " << (finish - start) << " sec";
+    android_log_print(ss.str().c_str()); 
+    return;
+    //////////////////////// renderscript support
 
     launcher_.launch(context, use_cudnn_, cudnn_use_autotune_, input, filter,
                      stride_rows, stride_cols,

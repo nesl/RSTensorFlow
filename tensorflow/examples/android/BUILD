@@ -53,6 +53,10 @@ cc_library(
     srcs = [
         ":libtensorflow_demo.so",
         "//tensorflow/contrib/android:libtensorflow_inference.so",
+                
+        # renderscript support
+        "//tensorflow/contrib/android_renderscript_ops/rs:rs_lib_so"
+        # renderscript support
     ],
     tags = [
         "manual",

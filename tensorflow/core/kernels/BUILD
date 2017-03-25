@@ -3886,6 +3886,11 @@ cc_library(
         "//tensorflow/core:protos_cc",
         "//third_party/eigen3",
         "@gemmlowp//:gemmlowp",
+
+        # renderscript support
+        "//tensorflow/contrib/android_renderscript_ops:android_rs_ops_utils",
+        "//tensorflow/contrib/android_renderscript_ops:rs_ops_ndkbuilt",
+        # renderscript support
     ],
     alwayslink = 1,
 )

@@ -1,0 +1,57 @@
+One forward path:
+
+// RenderScript GPU
+03-23 00:37:29.614 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Matmul Consume time: 0.01579 sec
+03-23 00:37:29.621 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Matmul Consume time: 0.006522 sec
+03-23 00:37:29.816 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.021245 sec
+03-23 00:37:29.847 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.003525 sec
+03-23 00:37:30.344 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.034096 sec
+03-23 00:37:30.395 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.003057 sec
+03-23 00:37:30.404 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.001999 sec
+03-23 00:37:30.418 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.002697 sec
+03-23 00:37:30.540 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.007481 sec
+03-23 00:37:30.552 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.002587 sec
+03-23 00:37:30.561 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.002444 sec
+03-23 00:37:30.580 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.00264 sec
+03-23 00:37:30.588 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.002315 sec
+03-23 00:37:30.669 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.005829 sec
+03-23 00:37:30.696 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.003314 sec
+03-23 00:37:30.990 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.011803 sec
+03-23 00:37:31.019 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.003584 sec
+03-23 00:37:31.036 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.001932 sec
+03-23 00:37:31.040 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.001737 sec
+03-23 00:37:31.045 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.001417 sec
+03-23 00:37:31.059 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.002169 sec
+03-23 00:37:31.108 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.003329 sec
+03-23 00:37:31.142 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.005959 sec
+03-23 00:37:31.151 4267-4286/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.00235 sec
+
+sum = 137ms
+
+// Eigen
+03-23 00:44:44.535 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Matmul Consume time: 0.031431 sec
+03-23 00:44:44.548 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Matmul Consume time: 0.014845 sec
+03-23 00:44:44.636 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.093331 sec
+03-23 00:44:44.660 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.009648 sec
+03-23 00:44:44.706 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.132425 sec
+03-23 00:44:44.742 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.004991 sec
+03-23 00:44:44.746 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.009121 sec
+03-23 00:44:44.755 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.010706 sec
+03-23 00:44:44.770 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.034836 sec
+03-23 00:44:44.772 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.00527 sec
+03-23 00:44:44.777 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.003646 sec
+03-23 00:44:44.790 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.013053 sec
+03-23 00:44:44.793 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.004604 sec
+03-23 00:44:44.800 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.025582 sec
+03-23 00:44:44.805 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.011465 sec
+03-23 00:44:44.834 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.077013 sec
+03-23 00:44:44.839 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.011339 sec
+03-23 00:44:44.847 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.003433 sec
+03-23 00:44:44.848 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.002022 sec
+03-23 00:44:44.854 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.008265 sec
+03-23 00:44:44.859 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.006731 sec
+03-23 00:44:44.865 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.017167 sec
+03-23 00:44:44.870 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.009923 sec
+03-23 00:44:44.873 5411-5429/org.tensorflow.demo I/TF_ANDROID_LOG: Conv Consume time: 0.001105 sec
+
+sum = 531ms

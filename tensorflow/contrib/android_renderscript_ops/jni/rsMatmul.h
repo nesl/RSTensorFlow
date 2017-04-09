@@ -14,6 +14,7 @@ namespace matmul {
 
 static sp<RS> mRS = new RS();
 static const char* cachePath = "/data/user/0/org.tensorflow.demo/cache";
+static int tot_matmul_cnt = 2;
 static int count = 0;
 static std::vector<sp<Allocation>> a_alloc_vec;
 static std::vector<sp<Allocation>> b_alloc_vec;
@@ -29,13 +30,13 @@ sp<ScriptIntrinsicBLAS>& initSC()
 void rsMatmul_sgemm(void* a_ptr, bool a_trans, void* b_ptr, bool b_trans, void* c_ptr,
                     int m, int n, int k, float alpha, float beta)
 {
-    int idx = count%2;
+    int idx = count%tot_matmul_cnt;
 
     if(!androidrs::matmul::mRS->getContext()){
         androidrs::matmul::mRS->init(androidrs::matmul::cachePath);
     }
 
-    if(count<2){
+    if(count<tot_matmul_cnt){
         sp<const Element> e = Element::F32(androidrs::matmul::mRS);
 
         sp<const Type> a_t = Type::create(androidrs::matmul::mRS, e, k, m, 0);

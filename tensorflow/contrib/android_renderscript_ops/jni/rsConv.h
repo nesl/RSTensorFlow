@@ -48,6 +48,7 @@ struct rsConvInfo{
 
 static sp<RS> mRS = new RS();
 static const char* cachePath = "/data/user/0/org.tensorflow.demo/cache";
+static int tot_conv_cnt = 22; 
 static int count = 0; 
 static std::vector<sp<Allocation>> allFilters_alloc_vec;
 static std::vector<sp<Allocation>> allInputs_alloc_vec;
@@ -62,13 +63,13 @@ sp<ScriptC_mScriptConv>& initSC()
 template <typename T>
 void rsConv_script(void* filter, void* input, void* output, rsConvInfo convInfo)
 {
-    int idx = count%22;
+    int idx = count%tot_conv_cnt;
 
     if(!androidrs::conv::mRS->getContext()){
         androidrs::conv::mRS->init(androidrs::conv::cachePath);
     }
 
-    if(count<22){
+    if(count<tot_conv_cnt){
         static sp<const Element> e = Element::F32(androidrs::conv::mRS);
 
         // alloc filter

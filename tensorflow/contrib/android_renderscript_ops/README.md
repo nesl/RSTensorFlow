@@ -27,6 +27,7 @@ This package contains two RenderScript ops: `rsMatmul_sgemm` and `rsConv_script`
         api_level = 14
     )
     ```
+* If use custom model (not Inception5h) or custom app (not org.tensorflow.demo), you must change the number of the `matmul` ops and `conv` ops at `androidrs::matmul` and `androidrs::conv`. Also change the package name to your own within these two namespaces. This hardcoding issue might be removed in future update. 
 * Build with bazel:  
     `bazel build -c opt //tensorflow/examples/android:tensorflow_demo`
 * Finally install to android phone:  

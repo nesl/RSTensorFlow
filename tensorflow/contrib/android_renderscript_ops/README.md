@@ -48,7 +48,7 @@ Download:
 * [Prebuilt APK with RS support](https://www.dropbox.com/s/e97m6yfql6j9ymb/tensorflow_demo_RS.apk?dl=0) 
 * [Prebuilt APK with defalut Eigen](https://www.dropbox.com/s/ek43f4npo6sel6z/tensorflow_demo_eigen.apk?dl=0) 
 
-In our case, the app works on GPU of Nexus6 with Android 7.0 but crash on Nexus5 with Android 6.0. However it works on Nexus5x with Android 6.0 but only working on CPU. When we updated the Nexus5x to 7.0, the app will run on GPU of Nexus5x. 
+In our case, the app works on GPU of Nexus6 with Android 7.0 but crash on Nexus5 with Android 6.0. However it works on Nexus5x with Android 6.0 but only working on CPU. When we updated the Nexus5x to 7.0, the app will run on GPU of Nexus5x. In all, if your phone is Android 7.0 it should be fine. 
 
 
 ## Stand-alone RenderScript ops test
@@ -58,15 +58,19 @@ You can find a ops test app here: [RenderScriptOps](https://github.com/EE202B/Re
 For more implementation detail you can checkout the ppt in the `doc` folder. 
 
 ## Issue
-In comparison with the default eigen version(~0.6sec per forward path), our renderscript supported app runs slower(~1.5sec per forward path) on the app level, but for the actual computation time consumption, our app has 3x speed up when running on GPU. The rough test result at op level can be seen at `doc/test-result.txt` and the timer measurement is at [Timer]().
+In comparison with the default eigen version(~0.6sec per forward path), our renderscript supported app runs slower(~1.5sec per forward path) on the app level, but for the actual computation time consumption, our app has 3x speed up when running on GPU. The rough test result at op level can be seen at `doc/test-result.txt` and the timer measurement is at [Timer](https://github.com/EE202B/tensorflow/blob/RenderScript/tensorflow/core/kernels/conv_ops.cc#L390).
 
 What's more, when renderscript is enabled, all ops (even the ones we didn't touch!) will get much slower. So we investigated this issue, we found out that when enable RenderScript, the frequency of the 4 CPU cores will become unstable and most time they are slow (when rsMatmul and rsConv are computing with RenderScript, the frequency is slow. And when other ops is computing, the frequency will increase again. But CPU cannot really switch freq very fast, this is why we get the unstable and since rsMatmul and rsConv are the two most time consumption ops, they will drag the overall average frequency down, so we get a slower forward path with RenderScript). 
 
 On the other hand, when running the default eigen version, the 4 cores' frequency is very stable at 2GHz. It run with support of ARM NEON. That's why it's faster. 
 
-The following screenshots are captured with `trepn profiler`. Left is RenderScript version and right is Eigen version.
+The following screenshots are captured with `trepn profiler`. Top is RenderScript version and bottom is Eigen version.
 
-[fig]
+<centering>
+<img src="https://github.com/EE202B/tensorflow/raw/RenderScript/tensorflow/contrib/android_renderscript_ops/doc/rs.png" width="240" height="420" style="float: left"/> 
+<img src="https://github.com/EE202B/tensorflow/raw/RenderScript/tensorflow/contrib/android_renderscript_ops/doc/eigen.png" width="240" height="420" style="float: left"/> 
+</centering>
+
 
 This unstable of the CPU frequency is what cause the ops we don't even touch get slow. Additionally, we root the phone and fix the all 4 cores running at 2GHz, but we still get 1.5sec per forward path. So RenderScript cannot really benefit from this maximum frequency. 
 

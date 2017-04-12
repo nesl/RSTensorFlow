@@ -44,25 +44,39 @@ The currently build is for `armeabi-v7a` only. The RenderScript library, RS preb
 
 
 ## Prebuilt apk  
-Download: [Prebuilt APK](https://www.dropbox.com/s/iwo31agtpsgyuhh/tensorflow_demo.apk?dl=0)  
+Download: 
+* [Prebuilt APK with RS support](https://www.dropbox.com/s/e97m6yfql6j9ymb/tensorflow_demo_RS.apk?dl=0) 
+* [Prebuilt APK with defalut Eigen](https://www.dropbox.com/s/ek43f4npo6sel6z/tensorflow_demo_eigen.apk?dl=0) 
 
-In our case, the app works on Nexus6 with Android 7.0 but crash on Nexus5 with android 6.0. This may also apply to the building procedure above.
+In our case, the app works on GPU of Nexus6 with Android 7.0 but crash on Nexus5 with Android 6.0. However it works on Nexus5x with Android 6.0 but only working on CPU. When we updated the Nexus5x to 7.0, the app will run on GPU of Nexus5x. 
 
 
 ## Stand-alone RenderScript ops test
-You can find a ops test app here: [RenderScriptOps](https://github.com/EE202B/RenderScriptOps). The test data are fetched from TF Classify app runtime.
-
-## Issue
-In comparison with the default eigen version, our renderscript supported app runs slower on the app level, but for the actual op time consumption, our app has 3x speed up when running on GPU. The rough test result can be seen at `doc/test-result.txt`. We believe this is caused by the app's Java level code. We will keep working on this to avoid the app level delay and provide a more professional test later.
+You can find a ops test app here: [RenderScriptOps](https://github.com/EE202B/RenderScriptOps). The TF test data are fetched from TF Classify app runtime.
 
 ## Documentation
-For more implementation detail you can checkout the ppt in the `doc` folder.  
+For more implementation detail you can checkout the ppt in the `doc` folder. 
 
-## GEMMLowp version  
+## Issue
+In comparison with the default eigen version(~0.6sec per forward path), our renderscript supported app runs slower(~1.5sec per forward path) on the app level, but for the actual computation time consumption, our app has 3x speed up when running on GPU. The rough test result at op level can be seen at `doc/test-result.txt` and the timer measurement is at [Timer]().
+
+What's more, when renderscript is enabled, all ops (even the ones we didn't touch!) will get much slower. So we investigated this issue, we found out that when enable RenderScript, the frequency of the 4 CPU cores will become unstable and most time they are slow (when rsMatmul and rsConv are computing with RenderScript, the frequency is slow. And when other ops is computing, the frequency will increase again. But CPU cannot really switch freq very fast, this is why we get the unstable and since rsMatmul and rsConv are the two most time consumption ops, they will drag the overall average frequency down, so we get a slower forward path with RenderScript). 
+
+On the other hand, when running the default eigen version, the 4 cores' frequency is very stable at 2GHz. It run with support of ARM NEON. That's why it's faster. 
+
+The following screenshots are captured with `trepn profiler`. Left is RenderScript version and right is Eigen version.
+
+[fig]
+
+This unstable of the CPU frequency is what cause the ops we don't even touch get slow. Additionally, we root the phone and fix the all 4 cores running at 2GHz, but we still get 1.5sec per forward path. So RenderScript cannot really benefit from this maximum frequency. 
+
+# GEMMLowp version  
 Another alternative method to enhance the TensorFlow on Android is using `GEMMLowp` model instead of eigen.
 
 * You need to first fetch the original eigen model:
-    `curl https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip`
+    ```
+    curl https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip
+    ```
 * Then use the [quantize_graph](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/tools/quantization) tool to generate the eight-bit model.
 
     ```
@@ -87,7 +101,3 @@ Another alternative method to enhance the TensorFlow on Android is using `GEMMLo
 * Then you should be able to build with `bazel build -c opt //tensorflow/examples/android:tensorflow_demo`  
 
 We found out that GEMMLowp model is 2x slower than the eigen model due to have more conv layers, but the power consumption is less than eigen. More detail can be seen in our document.
-
-## Useful tips  
-* When running TF app, push the volume control buttom of the phone
-* Using `trepn profiler` to monitor the perfoemance of the app.

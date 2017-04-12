@@ -28,6 +28,7 @@ import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
 import android.os.SystemClock;
 import android.os.Trace;
+import android.util.Log;
 import android.util.Size;
 import android.util.TypedValue;
 import android.view.Display;
@@ -226,6 +227,7 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
             final long startTime = SystemClock.uptimeMillis();
             final List<Classifier.Recognition> results = classifier.recognizeImage(croppedBitmap);
             lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
+            Log.i("TF_ANDROID_LOG", "Path time: " + lastProcessingTimeMs + "ms");
 
             cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
             resultsView.setResults(results);

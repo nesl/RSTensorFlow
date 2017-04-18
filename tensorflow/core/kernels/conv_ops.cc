@@ -351,12 +351,14 @@ class Conv2DOp : public BinaryOp<T> {
             context, input, filter, batch, input_rows, input_cols, in_depth,
             filter_rows, filter_cols, pad_rows, pad_cols, out_rows, out_cols,
             out_depth, stride_rows, stride_cols, output, data_format_)) {
+        LOG(INFO) << "DEEPCONV OP \n";
       return;
     }
 
     launcher_.launch(context, use_cudnn_, cudnn_use_autotune_, input, filter,
                      stride_rows, stride_cols,
                      BrainPadding2EigenPadding(padding_), output, data_format_);
+        LOG(INFO) << "Normal Conv OP \n";
   }
 
  private:

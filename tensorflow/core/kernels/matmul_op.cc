@@ -29,6 +29,9 @@ limitations under the License.
 #include "tensorflow/core/platform/stream_executor.h"
 #endif  // GOOGLE_CUDA
 
+
+#include <ctime>
+
 namespace tensorflow {
 
 #if GOOGLE_CUDA
@@ -234,7 +237,16 @@ class MatMulOp : public OpKernel {
       return;
     }
 
+    // Original MatMul Op
+    timespec start_matmul, end_matmul;
+    clock_gettime(CLOCK_MONOTONIC, &start_matmul);
     LaunchMatMul<Device, T, USE_CUBLAS>::launch(ctx, this, a, b, dim_pair, out);
+    clock_gettime(CLOCK_MONOTONIC, &end_matmul);
+
+    float matmul_time = (end_matmul.tv_sec - start_matmul.tv_sec) +
+        ((float) (end_matmul.tv_nsec - start_matmul.tv_nsec)) / 1000000000.0f;
+    
+    LOG(INFO) << "   MatMul:  " << matmul_time << " sec.\n";
   }
 
  private:

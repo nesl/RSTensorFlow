@@ -9,6 +9,7 @@ package(default_visibility = [
     # to co-exist in a single shared library. However, the hope is that
     # //third_party/tensorflow/contrib/android:android_tensorflow_jni can be
     # removed once the Java API provides feature parity with it.
+    "//tensorflow/contrib/rs_android:__pkg__",
     "//tensorflow/contrib/android:__pkg__",
 ])
 

@@ -5,6 +5,7 @@
 #ifndef RSKERNELSTEST_RSCONV_H
 #define RSKERNELSTEST_RSCONV_H
 
+
 #include "tensorflow/contrib/android_renderscript_ops/jni/RScommon.h"
 #include "tensorflow/contrib/android_renderscript_ops/jni/ScriptC_mScriptConv.h"
 
@@ -47,16 +48,21 @@ struct rsConvInfo{
 };
 
 static sp<RS> mRS = new RS();
-static const char* cachePath = "/data/user/0/org.tensorflow.demo/cache";
+static sp<ScriptC_mScriptConv> sc = nullptr;
+static const char* cachePath = kCachePath;
+//static const char* cachePath = "/data/user/0/org.tensorflow.demo/cache";
 static int tot_conv_cnt = 22; 
 static int count = 0; 
-static std::vector<sp<Allocation>> allFilters_alloc_vec;
-static std::vector<sp<Allocation>> allInputs_alloc_vec;
-static std::vector<sp<Allocation>> allOutputs_alloc_vec;
+//static std::vector<sp<Allocation>> allFilters_alloc_vec;
+//static std::vector<sp<Allocation>> allInputs_alloc_vec;
+//static std::vector<sp<Allocation>> allOutputs_alloc_vec;
 
 sp<ScriptC_mScriptConv>& initSC()
 {
-    static sp<ScriptC_mScriptConv> sc = new ScriptC_mScriptConv(androidrs::conv::mRS);
+    if (sc == nullptr) {
+    sc = new ScriptC_mScriptConv(androidrs::conv::mRS);
+    // LOG(INFO) << "Initialized ConvScript.\n";
+    }
     return sc;
 }
 
@@ -69,7 +75,7 @@ void rsConv_script(void* filter, void* input, void* output, rsConvInfo convInfo)
         androidrs::conv::mRS->init(androidrs::conv::cachePath);
     }
 
-    if(count<tot_conv_cnt){
+     // if(count<tot_conv_cnt){
         static sp<const Element> e = Element::F32(androidrs::conv::mRS);
 
         // alloc filter
@@ -88,14 +94,17 @@ void rsConv_script(void* filter, void* input, void* output, rsConvInfo convInfo)
                                                         0);
         sp<Allocation > allOutputs_alloc = Allocation::createTyped(androidrs::conv::mRS, all_outputs_t, RS_ALLOCATION_USAGE_SHARED | RS_ALLOCATION_USAGE_SCRIPT);
 
-        allFilters_alloc_vec.push_back(allFilters_alloc);
-        allInputs_alloc_vec.push_back(allInputs_alloc);
-        allOutputs_alloc_vec.push_back(allOutputs_alloc);
-    }
+        // allFilters_alloc_vec.push_back(allFilters_alloc);
+        // allInputs_alloc_vec.push_back(allInputs_alloc);
+        // allOutputs_alloc_vec.push_back(allOutputs_alloc);
+    // }
 
-    allFilters_alloc_vec[idx]->copy1DFrom(filter);
-    allInputs_alloc_vec[idx]->copy1DFrom(input);
+    // allFilters_alloc_vec[idx]->copy1DFrom(filter);
+    // allInputs_alloc_vec[idx]->copy1DFrom(input);
 
+    allFilters_alloc->copy1DFrom(filter);
+    allInputs_alloc->copy1DFrom(input);
+    
     sp<ScriptC_mScriptConv> sc = initSC();
 
     //kernel
@@ -112,15 +121,17 @@ void rsConv_script(void* filter, void* input, void* output, rsConvInfo convInfo)
     sc->set_out_rows(convInfo.out_rows);
     sc->set_out_cols(convInfo.out_cols);
 
-    sc->set_filters(allFilters_alloc_vec[idx]);
-    sc->set_inputs(allInputs_alloc_vec[idx]);
+    // sc->set_filters(allFilters_alloc_vec[idx]);
+    sc->set_filters(allFilters_alloc);
+    // sc->set_inputs(allInputs_alloc_vec[idx]);
+    sc->set_inputs(allInputs_alloc);
     sc->invoke_initParam();
 
-    sc->forEach_launchConvF32(allOutputs_alloc_vec[idx]);
-
-    // sync
-    allOutputs_alloc_vec[idx]->copy1DTo(output);
-    count++;
+    // sc->forEach_launchConvF32(allOutputs_alloc_vec[idx]);
+    sc->forEach_launchConvF32(allOutputs_alloc);
+    allOutputs_alloc->copy1DTo(output);
+    // allOutputs_alloc_vec[idx]->copy1DTo(output);
+    // count++;
 };
 
 }

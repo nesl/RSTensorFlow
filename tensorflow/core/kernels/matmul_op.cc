@@ -310,20 +310,21 @@ class MatMulOp : public OpKernel {
     }
 
     //////////////////////// renderscript support
-    std::stringstream ss;
-    double start, finish;
-    start = (double)(clock()/(double)CLOCKS_PER_SEC);
+    timespec start, finish;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    
     androidrs::matmul::rsMatmul_sgemm(static_cast<void*>(const_cast<char*>(a.tensor_data().data())), 0, 
                                   static_cast<void*>(const_cast<char*>(b.tensor_data().data())), 0, 
                                   static_cast<void*>(const_cast<char*>(out->tensor_data().data())), 
                                   a.dim_size(0), b.dim_size(1), a.dim_size(1), 1, 0);
-    finish = (double)(clock()/(double)CLOCKS_PER_SEC);
-    ss << "Matmul consume time: " << (finish - start) << " sec";
-    android_log_print(ss.str().c_str());   
-    return;
     //////////////////////// renderscript support
-
-    LaunchMatMul<Device, T, USE_CUBLAS>::launch(ctx, this, a, b, dim_pair, out);
+    
+    
+    // LaunchMatMul<Device, T, USE_CUBLAS>::launch(ctx, this, a, b, dim_pair, out);
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+    float matmul_time = (finish.tv_sec - start.tv_sec) + ((float)(finish.tv_nsec - start.tv_nsec)/1000000000.0f);
+    //LOG(INFO)  << "Matmul consume time: " << (matmul_time) << " sec";
+    //return;
   }
 
  private:

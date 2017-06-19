@@ -385,25 +385,27 @@ class Conv2DOp : public BinaryOp<T> {
     }
 
     //////////////////////// renderscript support
-    std::stringstream ss;
-    double start, finish;
-    start = (double)(clock()/(double)CLOCKS_PER_SEC);
+   
+    // timespec start, finish;
+    // clock_gettime(CLOCK_MONOTONIC, &start);
     androidrs::conv::rsConvInfo convInfo(in_depth, input_rows, input_cols, filter_rows, filter_cols,
                                          stride_rows, stride_cols, pad_rows, pad_cols, 
                                          out_depth, out_rows, out_cols, batch, sizeof(T));
+    
     androidrs::conv::rsConv_script<T>(static_cast<void*>(const_cast<char*>(filter.tensor_data().data())), 
                                       static_cast<void*>(const_cast<char*>(input.tensor_data().data())), 
                                       static_cast<void*>(const_cast<char*>(output->tensor_data().data())), 
                                       convInfo);
-    finish = (double)(clock()/(double)CLOCKS_PER_SEC);
-    ss << "Conv consume time: " << (finish - start) << " sec";
-    android_log_print(ss.str().c_str()); 
-    return;
+    
     //////////////////////// renderscript support
-
-    launcher_.launch(context, use_cudnn_, cudnn_use_autotune_, input, filter,
+    /*
+     launcher_.launch(context, use_cudnn_, cudnn_use_autotune_, input, filter,
                      stride_rows, stride_cols,
                      BrainPadding2EigenPadding(padding_), output, data_format_);
+    */
+    // clock_gettime(CLOCK_MONOTONIC, &finish);
+    // float conv_time = (finish.tv_sec - start.tv_sec) + ((float)(finish.tv_nsec - start.tv_nsec)/1000000000.0f);
+    // LOG(INFO) << "ConvTime = " << conv_time << "\n";
   }
 
  private:

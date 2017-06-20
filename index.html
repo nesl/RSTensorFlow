@@ -67,14 +67,19 @@ Embedded and Mobile Deep Learning Workshop (EMDL 2017) </a>.
         You can download the pre-built libraries of RSTensorFlow  and use them to develop your own RSTensorFlow enabled Android application.
         <ul>
 
-        <li> <h4> Original Tensorflow libaries </h4> </li>
-        <a href='prebuilt/original/libtensorflow_inference.so'>  Native Library </a>   &emsp; <a href='prebuilt/original/libandroid_tensorflow_inference_java.jar'> Java Library </a>
+        <li> <h4> Original Tensorflow libaries </h4> 
+        <a href='prebuilt/original/libtensorflow_inference.so'>  Native Library </a>   &emsp; <a href='prebuilt/original/libandroid_tensorflow_inference_java.jar'> Java Library </a> 
+        <br/>
+        </li>
 
-        <li> <h4> RenderScript MatMul only </h4> </li>
-        <a href='prebuilt/matmul/libtensorflow_inference.so'>  Native Library </a>   &emsp; <a href='prebuilt/matmul/libandroid_tensorflow_inference_java.jar'> Java Library </a>
+        <li> <h4> RenderScript MatMul only </h4> 
+        <a href='prebuilt/matmul/libtensorflow_inference.so'>  Native Library </a>   &emsp; <a href='prebuilt/matmul/libandroid_tensorflow_inference_java.jar'> Java Library </a>        <br/>
+</li>
 
-        <li><h4> RenderScript MatMul and Convolution </h4> </li>
-        <a href='prebuilt/matmulconv/libtensorflow_inference.so'>  Native Library </a> &emsp;  <a href='prebuilt/matmulconv/libandroid_tensorflow_inference_java.jar'> Java Library </a>
+        <li><h4> RenderScript MatMul and Convolution </h4> 
+        <a href='prebuilt/matmulconv/libtensorflow_inference.so'>  Native Library </a> &emsp;  <a href='prebuilt/matmulconv/libandroid_tensorflow_inference_java.jar'> Java Library </a>        <br/>
+
+        </li>
        	</ul>
 
        
@@ -113,17 +118,13 @@ Embedded and Mobile Deep Learning Workshop (EMDL 2017) </a>.
         </pre>
         or build the TensorFlow for Android libraries. <br/>
         To build the native library 
-        <pre>
-        <code>bazel build -c opt //tensorflow/contrib/android:libtensorflow_inference.so \
+        <pre>bazel build -c opt //tensorflow/contrib/android:libtensorflow_inference.so \
    --crosstool_top=//external:android/crosstool \
    --host_crosstool_top=@bazel_tools//tools/cpp:toolchain \
    --cpu=armeabi-v7a
-        </code> </pre>
+        </pre>
         Then, build the Java library
-        <pre>
-        <code>
-        bazel build //tensorflow/contrib/android:android_tensorflow_inference_java
-        </code>
+        <pre>bazel build //tensorflow/contrib/android:android_tensorflow_inference_java
         </pre>
         </p>
         </ol>

@@ -105,26 +105,19 @@ Embedded and Mobile Deep Learning Workshop (EMDL 2017) </a>.
         <b>matmul_and_conv</b> branch has the code for GPU-accelerated matrix multiplication and convolution operations.</p>
 
         For example,
-                <pre>
-        <code>
-        git checkout matmul_only
-        </code>
-        </pre>
+                <pre><code>git checkout matmul_only</code></pre>
         <li> Build TensorFlow libraries for Android </li>
         <p>
         Build the Android demo app 
-        <pre>
-        <code >bazel build -c opt //tensorflow/examples/android:tensorflow_demo</code>
-        </pre>
+        <pre><code >bazel build -c opt //tensorflow/examples/android:tensorflow_demo</code></pre>
         or build the TensorFlow for Android libraries. <br/>
         To build the native library 
-        <pre>bazel build -c opt //tensorflow/contrib/android:libtensorflow_inference.so \
+        <pre><code>bazel build -c opt //tensorflow/contrib/android:libtensorflow_inference.so \
    --crosstool_top=//external:android/crosstool \
    --host_crosstool_top=@bazel_tools//tools/cpp:toolchain \
-   --cpu=armeabi-v7a
-        </pre>
+   --cpu=armeabi-v7a</code></pre>
         Then, build the Java library
-        <pre>bazel build //tensorflow/contrib/android:android_tensorflow_inference_java
+        <pre><code>bazel build //tensorflow/contrib/android:android_tensorflow_inference_java</code>
         </pre>
         </p>
         </ol>

@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>RSTensorFlow by nesl</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+   <script>hljs.initHighlightingOnLoad();</script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+          <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-49614065-1', 'nesl.github.io');
+  ga('send', 'pageview');
+</script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header >
+        <h1><img src="images/RSTensorFlow.png" height="96px" style="vertical-align:center"/></h1>
+        <h1> <a href="index.html">RSTensorFlow</a></h1>
+        <p style='white-space: nowrap'><a href="index.html">GPU Accelerated TensorFlow for Commodity Android Devices</a></p>
+      </header>
+			<div id="links">
+				<a href="#overview">Overview</a>
+				<a href='#paper'> Paper </a>
+				<a href="#download">Download</a>
+				<a href="#build">Build</a>
+        		<a href="#contact">Contact us</a>
+			</div>
+      <section>
+ 
+      </section>
+      <section id='overview'>
+        <p><strong>RSTensorFlow</strong> is a modified version of TensorFlow that utilizes the GPUs of commodity Android devices. RSTensorFlow is developed by the <a href="http://nesl.ee.ucla.edu/">Networked and Embedded Systems Lab (NESL)</a> at UCLA.
+        
+      </section>
+       <section id='paper'>
+       <h3> RSTensorFlow Paper </h3>
+        For more information about RSTensorFlow, please read our  <a href='paper/rstensorflow.pdf'> paper </a>
+
+
+         <br /> <br />
+         If you use it for your own research project,  please cite the our paper <br>
+        <a href='paper/rstensorflow.pdf'>
+      <strong>"RSTensorFlow: GPU Enabled TensorFlow for Deep Learning on Commodity Android Devices
+"</strong>, Moustafa Alzantot, Yingnan Wang, Zhengshuang Ren, Mani Srivastava, 
+Embedded and Mobile Deep Learning Workshop (EMDL 2017) </a>.
+
+       </section>
+      <section id='download'>
+        <h3>RSTensorFlow Prebuilt libraries</h3>
+        You can download the pre-built libraries of RSTensorFlow  and use them to develop your own RSTensorFlow enabled Android application.
+        <ul>
+
+        <li> <h4> Original Tensorflow libaries </h4> </li>
+        <a href='prebuilt/original/libtensorflow_inference.so'>  Native Library </a>   &emsp; <a href='prebuilt/original/libandroid_tensorflow_inference_java.jar'> Java Library </a>
+
+        <li> <h4> RenderScript MatMul only </h4> </li>
+        <a href='prebuilt/matmul/libtensorflow_inference.so'>  Native Library </a>   &emsp; <a href='prebuilt/matmul/libandroid_tensorflow_inference_java.jar'> Java Library </a>
+
+        <li><h4> RenderScript MatMul and Convolution </h4> </li>
+        <a href='prebuilt/matmulconv/libtensorflow_inference.so'>  Native Library </a> &emsp;  <a href='prebuilt/matmulconv/libandroid_tensorflow_inference_java.jar'> Java Library </a>
+       	</ul>
+
+       
+      </section>
+
+      <section id='build'>
+        <h3>RSTensorflow is available as an open-source project on GitHub</h3>
+        Our project is available at <a href='https://github.com/nesl/RSTensorFlow'> https://github.com/nesl/RSTensorFlow </a>
+        <h4> Build instructions: </h4>
+
+        <ol>
+        <li> Clone the project repository </li>
+                <pre>
+        <code>
+        git clone https://github.com/nesl/RSTensorFlow.git
+        </code>
+        </pre>
+        <li> Edit  <b>WORKSPACE</b> file </li>
+        <p> You need to update the <b>WORKSPACE</b> file to update the Android SDK/NDK location path.</p>
+
+        <li> Select the appropriate branch </li>
+        <p> <b>master</b> branch is the original TensorFlow libraries. <b>matmul_only</b> branch has code for GPU-accelerated matrix multiplication only. 
+        <b>matmul_and_conv</b> branch has the code for GPU-accelerated matrix multiplication and convolution operations.</p>
+
+        For example,
+                <pre>
+        <code>
+        git checkout matmul_only
+        </code>
+        </pre>
+        <li> Build TensorFlow libraries for Android </li>
+        <p>
+        Build the Android demo app 
+        <pre>
+        <code >bazel build -c opt //tensorflow/examples/android:tensorflow_demo</code>
+        </pre>
+        or build the TensorFlow for Android libraries. <br/>
+        To build the native library 
+        <pre>
+        <code>bazel build -c opt //tensorflow/contrib/android:libtensorflow_inference.so \
+   --crosstool_top=//external:android/crosstool \
+   --host_crosstool_top=@bazel_tools//tools/cpp:toolchain \
+   --cpu=armeabi-v7a
+        </code> </pre>
+        Then, build the Java library
+        <pre>
+        <code>
+        bazel build //tensorflow/contrib/android:android_tensorflow_inference_java
+        </code>
+        </pre>
+        </p>
+        </ol>
+       
+      </section>
+
+           <section id='contact'>
+      <h3> Contact us </h3>
+     <p>Project developed by <a href="http://nesl.ee.ucla.edu/">NESL</a>, currently maintained by <a href="mailto:malzantot@ucla.edu">Moustafa Alzantot</a></p>
+     <p> Project supported by <a href='https://dais-ita.org'> DAIS-ITA </a> and <a href='https://md2k.org' > MD2K </a> </p>
+     </section>
+    </div>
+
+
+    <footer>
+          <p>Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+
+      </footer>
+
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
